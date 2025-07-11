@@ -1,0 +1,50 @@
+@use "../../styles/variables" as *;
+@use 'sass:color';
+
+
+.button {
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: $font-weight-semibold;
+}
+
+.primary {
+  background-color: $primary-color;
+  color: $white-color;
+
+  &:hover {
+    background-color: color.adjust($primary-color, $lightness: -10%);
+  }
+}
+
+.primary-no-bg {
+  background-color: transparent;
+  color: $white-color;
+
+  &:hover {
+    background-color: color.adjust($primary-color, $lightness: -10%);
+  }
+}
+
+.secondary {
+  background-color: transparent;
+  color: white;
+  border: 1px solid $white-color;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.sm {
+  font-size: $font-size-sm;
+}
+
+.lg {
+  font-size: $font-size-lg;
+}

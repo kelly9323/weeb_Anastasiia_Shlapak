@@ -1,27 +1,30 @@
-// Example
-@mixin flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+@use "./variables" as *;
+@use "sass:color";
 
-// Example
-@mixin respond($breakpoint) {
-  @if $breakpoint == "sm" {
-    @media (max-width: 640px) {
-      @content;
-    }
-  } @else if $breakpoint == "md" {
-    @media (max-width: 768px) {
-      @content;
+@mixin input-field {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid $accent-color;
+  padding: 10px;
+  color: $white-color;
+
+  &::placeholder {
+    color: $accent-color;
+    font-size: 25px;
+    text-align: center;
+  }
+
+  &:focus {
+    border: 1px solid color.adjust($accent-color, $lightness: -10%);
+    &::placeholder {
+      color: transparent;
     }
   }
 }
 
-//   USAGE
-// .section {
-//     @include flex-center;
-//     @include respond(md) {
-//       flex-direction: column;
-//     }
-//   }
+@mixin header1 {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  text-align: center;
+}
+
