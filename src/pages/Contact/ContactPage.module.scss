@@ -1,0 +1,69 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+@use "sass:color";
+
+.h1 {
+  @include header1;
+}
+
+.content {
+  width: 54%;
+  text-align: center;
+  margin: 1rem auto 4rem;
+}
+
+.form {
+  border: 1px solid $accent-color;
+  border-radius: 16px;
+  padding: 1rem 3rem;
+  width: 55%;
+  margin: 5rem auto;
+  color: $accent-color;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-size: 25px;
+}
+.row {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+
+  input {
+    flex: 1;
+    @include input-field;
+  }
+}
+
+.messageGroup {
+  margin-top: 15px;
+  textarea {
+    @include input-field;
+    width: 100%;
+  }
+}
+
+.contactBtn {
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .content {
+    width: 95%;
+    font-size: 1rem;
+    margin: 1rem auto 2rem;
+  }
+
+  .form {
+    width: 98%;
+    padding: 1rem 0.5rem;
+    font-size: 1rem;
+    margin: 2rem auto;
+  }
+
+  .row {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
