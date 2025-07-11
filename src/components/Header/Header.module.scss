@@ -1,0 +1,72 @@
+@use "../../styles/variables" as *;
+
+.header {
+  padding: 20px;
+  background-color: $secondary-background-color;
+  width: 80%;
+  margin: 20px auto;
+  border-radius: 16px;
+
+  &__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  &__group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    @media (max-width: 768px) {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      background-color: $secondary-background-color;
+      margin-top: 10px;
+    }
+
+    &.open {
+      display: flex;
+    }
+  }
+
+  &__logo {
+    font-size: 32px;
+    font-weight: 700;
+  }
+
+  .burger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: none;
+
+    img {
+      width: 28px;
+      height: 28px;
+    }
+
+    @media (max-width: 768px) {
+      display: block;
+      margin-left: auto;
+    }
+  }
+
+}
+.logoDesktop {
+  display: block;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.logoMobile {
+  display: none;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+}

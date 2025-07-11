@@ -1,0 +1,37 @@
+@use "../../styles/variables" as *;
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $white-color;
+  color: $black-color;
+  padding: 20px;
+}
+
+.logo {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.description {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.socialIcons {
+  display: flex;
+  gap: 12px;
+
+  img {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
+

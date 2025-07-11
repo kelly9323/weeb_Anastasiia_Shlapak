@@ -1,3 +1,25 @@
-@use './variables' as *;
-@use './mixins' as *;
-@use './reset';
+@use "./variables" as *;
+@use "./mixins" as *;
+@use "./reset" as *;
+
+body {
+  background-color: $background-color;
+  color: $white-color;
+  font-family: $font-base;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+}
+
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.hover:hover{
+    color: $primary-color;
+}
