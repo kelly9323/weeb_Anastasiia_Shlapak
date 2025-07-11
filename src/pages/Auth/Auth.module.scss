@@ -1,0 +1,143 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+@use "sass:color";
+
+.container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: color.adjust($background-color, $lightness: 5%);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.h1 {
+  @include header1;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: $primary-color;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  .inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    label {
+      font-size: 1rem;
+      //   color: $text-color;
+      font-weight: 500;
+    }
+
+    input {
+      @include input-field;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+
+      &:focus {
+        border-color: $primary-color;
+        box-shadow: 0 0 0 2px color.adjust($primary-color, $alpha: -0.8);
+      }
+    }
+  }
+}
+
+.submit {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.loginLink {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  a {
+    color: $primary-color;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.forgotPassword {
+  text-align: right;
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
+
+  a {
+    font-size: 0.9rem;
+    text-decoration: none;
+
+    &:hover {
+      color: $primary-color;
+      text-decoration: underline;
+    }
+  }
+}
+
+.signupLink {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+
+  a {
+    color: $primary-color;
+    font-weight: 500;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 1rem 0.5rem;
+    margin: 1rem 0.5rem;
+    max-width: 100%;
+  }
+
+  .h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .form {
+    gap: 1rem;
+  }
+
+  .inputGroup label {
+    font-size: 0.95rem;
+  }
+
+  .inputGroup input {
+    font-size: 0.95rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .submit {
+    margin-top: 0.5rem;
+  }
+
+  .loginLink,
+  .signupLink {
+    font-size: 0.85rem;
+    margin-top: 0.75rem;
+  }
+
+  .forgotPassword {
+    font-size: 0.85rem;
+    margin-top: 0;
+    margin-bottom: 0.25rem;
+  }
+}
