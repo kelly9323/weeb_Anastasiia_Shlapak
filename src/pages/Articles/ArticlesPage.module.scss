@@ -1,0 +1,139 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  min-height: 60vh;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 4rem;
+
+  h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: $primary-color;
+  }
+
+  p {
+    font-size: 1.2rem;
+    color: $light-grey;
+  }
+  
+  &__actions {
+    margin-top: 2rem;
+  }
+}
+
+.articles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  &__header {
+    margin-bottom: 1rem;
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: $primary-color;
+  }
+
+  &__meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: $light-grey;
+  }
+
+  &__author {
+    font-weight: 500;
+  }
+
+  &__date {
+    color: $light-grey;
+  }
+
+  &__content {
+    flex: 1;
+    margin-bottom: 1.5rem;
+
+    p {
+      line-height: 1.6;
+      color: $light-grey;
+    }
+  }
+
+  &__link {
+    align-self: flex-start;
+    color: $primary-color;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: $accent-color;
+    }
+  }
+}
+
+.loading,
+.error,
+.empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  font-size: 1.2rem;
+}
+
+.error {
+  color: $error-color;
+}
+
+.loading {
+  color: $accent-color;
+}
+
+.empty {
+  color: $light-grey;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 2rem 1rem;
+  }
+
+  .header {
+    h1 {
+      font-size: 2rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+  }
+
+  .articles {
+    grid-template-columns: 1fr;
+  }
+}
