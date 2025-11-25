@@ -5,6 +5,8 @@ import ContactPage from "../pages/Contact/ContactPage";
 import LoginPage from "../pages/Auth/LoginPage";
 import SignUpPage from "../pages/Auth/SignUpPage";
 import { AnimatePresence, motion } from "framer-motion";
+import ArticlesPage from "../pages/Articles/ArticlesPage";
+import ArticleDetailPage from "../pages/Articles/ArticleDetailPage";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -23,6 +25,32 @@ function AnimatedRoutes() {
                 transition={{ duration: 0.3 }}
               >
                 <HomePage />
+              </motion.div>
+            }
+          />
+          <Route
+            path="/articles"
+            element={
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ArticlesPage />
+              </motion.div>
+            }
+          />
+          <Route
+            path="/articles/:id"
+            element={
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ArticleDetailPage />
               </motion.div>
             }
           />
