@@ -84,7 +84,8 @@ export default function ArticleFormModal({
               onChange={(e) =>
                 setFormData({ ...formData, author: e.target.value })
               }
-              placeholder="Votre nom (optionnel)"
+              placeholder="Votre nom"
+              required
             />
           </div>
 
