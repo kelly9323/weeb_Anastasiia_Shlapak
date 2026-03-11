@@ -28,3 +28,13 @@
   text-align: center;
 }
 
+@mixin message-box($color) {
+  color: $color;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 0.5rem 1rem;
+  background: rgba($color, 0.1);
+  border-radius: 4px;
+  border: 1px solid rgba($color, 0.3);
+}
+
