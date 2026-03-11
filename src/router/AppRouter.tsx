@@ -4,6 +4,8 @@ import HomePage from "../pages/Home/HomePage";
 import ContactPage from "../pages/Contact/ContactPage";
 import LoginPage from "../pages/Auth/LoginPage";
 import SignUpPage from "../pages/Auth/SignUpPage";
+import PasswordResetPage from "../pages/Auth/PasswordResetPage";
+import PasswordResetConfirmPage from "../pages/Auth/PasswordResetConfirmPage";
 import { AnimatePresence, motion } from "framer-motion";
 import ArticlesPage from "../pages/Articles/ArticlesPage";
 import ArticleDetailPage from "../pages/Articles/ArticleDetailPage";
@@ -90,6 +92,32 @@ function AnimatedRoutes() {
                 transition={{ duration: 0.3 }}
               >
                 <SignUpPage />
+              </motion.div>
+            }
+          />
+          <Route
+            path="/password-reset"
+            element={
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <PasswordResetPage />
+              </motion.div>
+            }
+          />
+          <Route
+            path="/password-reset-confirm/:uid/:token"
+            element={
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <PasswordResetConfirmPage />
               </motion.div>
             }
           />

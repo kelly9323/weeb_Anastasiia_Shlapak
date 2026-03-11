@@ -1,12 +1,22 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./Header.module.scss";
 import Button from "../Button/Button";
 import burgerIcon from "../../assets/Burger-menu.png";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
+  const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  // no await here to navigate immediately and handle logout in background
+  const handleLogout = () => {
+    logout().catch(console.error);
+    navigate("/");
+    setIsOpen(false);
+  };
 
   return (
     <header className={styles.header}>
@@ -50,20 +60,37 @@ export default function Header() {
           <ul
             className={`${styles.header__group} ${isOpen ? styles.open : ""}`}
           >
-            <li>
-              <Button variant="primary-no-bg" size="sm">
-                <Link to="/login" onClick={() => setIsOpen(false)}>
-                  Log in
-                </Link>
-              </Button>
-            </li>
-            <li>
-              <Button variant="primary" size="sm">
-                <Link to="/signup" onClick={() => setIsOpen(false)}>
-                  Join us
-                </Link>
-              </Button>
-            </li>
+            {isAuthenticated ? (
+              <>
+                <li>
+                  <span>
+                    {user?.first_name} {user?.last_name}
+                  </span>
+                </li>
+                <li>
+                  <Button variant="primary-no-bg" size="sm" onClick={handleLogout}>
+                    Déconnexion
+                  </Button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Button variant="primary-no-bg" size="sm">
+                    <Link to="/login" onClick={() => setIsOpen(false)}>
+                      Log in
+                    </Link>
+                  </Button>
+                </li>
+                <li>
+                  <Button variant="primary" size="sm">
+                    <Link to="/signup" onClick={() => setIsOpen(false)}>
+                      Join us
+                    </Link>
+                  </Button>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </nav>

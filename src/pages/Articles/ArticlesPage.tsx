@@ -4,10 +4,12 @@ import styles from "./ArticlesPage.module.scss";
 import Button from "../../components/Button/Button";
 import { useState } from "react";
 import ArticleFormModal from "../../components/Modal/ArticleFormModal";
+import { useAuth } from "../../context/AuthContext";
 
 export default function ArticlesPage() {
   const { articles, loading, error, refetch } = useFetchArticles();
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const { isActiveMember } = useAuth();
 
   if (loading) {
     return (
@@ -36,15 +38,17 @@ export default function ArticlesPage() {
         <p>
           Découvrez nos dernières publications sur le web et les technologies
         </p>
-        <div className={styles.header__actions}>
-          <Button
-            variant="primary"
-            size="md"
-            onClick={() => setShowCreateModal(true)}
-          >
-            Créer un article
-          </Button>
-        </div>
+        {isActiveMember && (
+          <div className={styles.header__actions}>
+            <Button
+              variant="primary"
+              size="md"
+              onClick={() => setShowCreateModal(true)}
+            >
+              Créer un article
+            </Button>
+          </div>
+        )}
       </header>
 
       {articles.length === 0 ? (

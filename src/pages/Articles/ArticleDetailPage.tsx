@@ -5,10 +5,12 @@ import type { Article } from "../../api/articlesApi";
 import styles from "./ArticleDetailPage.module.scss";
 import Button from "../../components/Button/Button";
 import ArticleFormModal from "../../components/Modal/ArticleFormModal";
+import { useAuth } from "../../context/AuthContext";
 
 export default function ArticleDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { isActiveMember } = useAuth();
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -112,22 +114,24 @@ export default function ArticleDetailPage() {
             <p key={index}>{paragraph}</p>
           ))}
         </div>
-        <div className={styles.actions}>
-          <Button
-            variant="primary"
-            size="md"
-            onClick={() => setShowEditModal(true)}
-          >
-            Modifier
-          </Button>
-          <Button
-            variant="secondary"
-            size="md"
-            onClick={() => setShowDeleteConfirm(true)}
-          >
-            Supprimer
-          </Button>
-        </div>
+        {isActiveMember && (
+          <div className={styles.actions}>
+            <Button
+              variant="primary"
+              size="md"
+              onClick={() => setShowEditModal(true)}
+            >
+              Modifier
+            </Button>
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => setShowDeleteConfirm(true)}
+            >
+              Supprimer
+            </Button>
+          </div>
+        )}
       </article>
       {showEditModal && (
         <ArticleFormModal
