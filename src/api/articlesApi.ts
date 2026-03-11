@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://127.0.0.1:8000/api";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export interface Article {
   id: number;
@@ -16,11 +16,48 @@ export interface CreateArticleData {
 }
 
 export interface ContactFormData {
-  first_name: string; 
-  last_name: string; 
+  first_name: string;
+  last_name: string;
   phone: string | null;
   email: string;
   message: string;
+}
+
+// Token refresh injected by AuthProvider to avoid circular imports
+type TokenRefresher = () => Promise<string | null>;
+let doRefreshToken: TokenRefresher = async () => null;
+
+export function setTokenRefresher(refresher: TokenRefresher) {
+  doRefreshToken = refresher;
+}
+
+function getAccessToken(): string | null {
+  return localStorage.getItem("weeb_access_token");
+}
+
+async function fetchWithAuth(
+  url: string,
+  options: RequestInit = {}
+): Promise<Response> {
+  const token = getAccessToken();
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    ...(options.headers as Record<string, string>),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+
+  let response = await fetch(url, { ...options, headers });
+
+  if (response.status === 401 && token) {
+    // Unauthorized - try refreshing token and retrying once
+    const newToken = await doRefreshToken();
+    if (newToken) {
+      const retryHeaders = { ...headers, Authorization: `Bearer ${newToken}` };
+      response = await fetch(url, { ...options, headers: retryHeaders });
+    }
+  }
+
+  return response;
 }
 
 /**
@@ -43,16 +80,13 @@ export const fetchArticleById = async (id: number): Promise<Article> => {
 };
 
 /**
- * Create new article
+ * Create new article (requires authentication)
  */
 export const createArticle = async (
   data: CreateArticleData
 ): Promise<Article> => {
-  const response = await fetch(`${API_BASE_URL}/articles/`, {
+  const response = await fetchWithAuth(`${API_BASE_URL}/articles/`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify(data),
   });
 
@@ -64,17 +98,14 @@ export const createArticle = async (
 };
 
 /**
- * Update article 
+ * Update article (requires authentication)
  */
 export const updateArticle = async (
   id: number,
   data: CreateArticleData
 ): Promise<Article> => {
-  const response = await fetch(`${API_BASE_URL}/articles/${id}/`, {
+  const response = await fetchWithAuth(`${API_BASE_URL}/articles/${id}/`, {
     method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify(data),
   });
 
@@ -86,10 +117,10 @@ export const updateArticle = async (
 };
 
 /**
- * Delete article 
+ * Delete article (requires authentication)
  */
 export const deleteArticle = async (id: number): Promise<void> => {
-  const response = await fetch(`${API_BASE_URL}/articles/${id}/`, {
+  const response = await fetchWithAuth(`${API_BASE_URL}/articles/${id}/`, {
     method: "DELETE",
   });
 
@@ -101,8 +132,9 @@ export const deleteArticle = async (id: number): Promise<void> => {
 /**
  * Contact form submission
  */
-
-export const submitContactForm = async (data: ContactFormData): Promise<void> => {
+export const submitContactForm = async (
+  data: ContactFormData
+): Promise<void> => {
   const response = await fetch(`${API_BASE_URL}/contact/`, {
     method: "POST",
     headers: {
