@@ -1,6 +1,6 @@
 import Button from "../../../components/Button/Button";
 import styles from "../HomePage.module.scss";
-import desktop from "../../../assets/desktop.png";
+import desktop from "../../../assets/Desktop.png";
 import { Link } from "react-router-dom";
 
 export default function HeroBlock() {
