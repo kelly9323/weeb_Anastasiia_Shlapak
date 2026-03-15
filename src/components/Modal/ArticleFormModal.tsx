@@ -21,7 +21,6 @@ export default function ArticleFormModal({
   const [formData, setFormData] = useState({
     title: article?.title || "",
     content: article?.content || "",
-    author: article?.author || "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -71,20 +70,6 @@ export default function ArticleFormModal({
                 setFormData({ ...formData, title: e.target.value })
               }
               placeholder="Le titre de votre article"
-              required
-            />
-          </div>
-
-          <div className={styles.inputGroup}>
-            <label htmlFor="author">Auteur</label>
-            <input
-              type="text"
-              id="author"
-              value={formData.author}
-              onChange={(e) =>
-                setFormData({ ...formData, author: e.target.value })
-              }
-              placeholder="Votre nom"
               required
             />
           </div>

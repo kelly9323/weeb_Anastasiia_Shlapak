@@ -12,7 +12,6 @@ export interface Article {
 export interface CreateArticleData {
   title: string;
   content: string;
-  author?: string;
 }
 
 export interface ContactFormData {
