@@ -7,6 +7,7 @@ export interface Article {
   content: string;
   created_at: string;
   author: string;
+  author_user: number | null;
 }
 
 export interface CreateArticleData {

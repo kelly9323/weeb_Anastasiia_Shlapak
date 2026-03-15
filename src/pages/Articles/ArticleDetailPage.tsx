@@ -10,13 +10,14 @@ import { useAuth } from "../../context/AuthContext";
 export default function ArticleDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { isActiveMember } = useAuth();
+  const { user } = useAuth();
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const isAuthor = !!user && article?.author_user === user.id;
 
   useEffect(() => {
     const loadArticle = async () => {
@@ -114,7 +115,7 @@ export default function ArticleDetailPage() {
             <p key={index}>{paragraph}</p>
           ))}
         </div>
-        {isActiveMember && (
+        {isAuthor && (
           <div className={styles.actions}>
             <Button
               variant="primary"
