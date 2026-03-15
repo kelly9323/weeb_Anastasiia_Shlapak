@@ -23,7 +23,7 @@ export interface ContactFormData {
   message: string;
 }
 
-// Token refresh injected by AuthProvider to avoid circular imports
+// Token functions injected by AuthProvider to avoid circular imports
 type TokenRefresher = () => Promise<string | null>;
 let doRefreshToken: TokenRefresher = async () => null;
 
@@ -31,8 +31,15 @@ export function setTokenRefresher(refresher: TokenRefresher) {
   doRefreshToken = refresher;
 }
 
+type AccessTokenGetter = () => string | null;
+let doGetAccessToken: AccessTokenGetter = () => null;
+
+export function setAccessTokenGetter(getter: AccessTokenGetter) {
+  doGetAccessToken = getter;
+}
+
 function getAccessToken(): string | null {
-  return localStorage.getItem("weeb_access_token");
+  return doGetAccessToken();
 }
 
 async function fetchWithAuth(

@@ -10,7 +10,6 @@ export interface UserInfo {
 
 export interface LoginResponse {
   access: string;
-  refresh: string;
   user: UserInfo;
 }
 
@@ -29,7 +28,6 @@ export interface RegisterResponse {
 
 export interface TokenRefreshResponse {
   access: string;
-  refresh: string;
 }
 
 export class ApiError extends Error {
@@ -66,6 +64,7 @@ export async function loginUser(
   const response = await fetch(`${API_BASE_URL}/users/login/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify({ email, password }),
   });
   return handleResponse<LoginResponse>(response);
@@ -82,28 +81,23 @@ export async function registerUser(
   return handleResponse<RegisterResponse>(response);
 }
 
-export async function logoutUser(
-  refresh: string,
-  accessToken: string
-): Promise<void> {
+export async function logoutUser(accessToken: string): Promise<void> {
   const response = await fetch(`${API_BASE_URL}/users/logout/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     },
-    body: JSON.stringify({ refresh }),
+    credentials: "include",
   });
   return handleResponse<void>(response);
 }
 
-export async function refreshTokens(
-  refresh: string
-): Promise<TokenRefreshResponse> {
+export async function refreshTokens(): Promise<TokenRefreshResponse> {
   const response = await fetch(`${API_BASE_URL}/users/token/refresh/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ refresh }),
+    credentials: "include",
   });
   return handleResponse<TokenRefreshResponse>(response);
 }

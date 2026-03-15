@@ -3,6 +3,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import type { ReactNode } from "react";
@@ -13,10 +14,8 @@ import {
   registerUser,
 } from "../api/authApi";
 import type { RegisterData, RegisterResponse, UserInfo } from "../api/authApi";
-import { setTokenRefresher } from "../api/articlesApi";
+import { setTokenRefresher, setAccessTokenGetter } from "../api/articlesApi";
 
-const ACCESS_TOKEN_KEY = "weeb_access_token";
-const REFRESH_TOKEN_KEY = "weeb_refresh_token";
 const USER_KEY = "weeb_user";
 
 interface AuthContextType {
@@ -25,6 +24,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isActiveMember: boolean;
   isAdmin: boolean;
+  isInitializing: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   register: (data: RegisterData) => Promise<RegisterResponse>;
@@ -36,47 +36,37 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserInfo | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [refreshToken, setRefreshToken] = useState<string | null>(null);
-
-  // Restore session from localStorage on mount or refresh
-  useEffect(() => {
-    const storedAccess = localStorage.getItem(ACCESS_TOKEN_KEY);
-    const storedRefresh = localStorage.getItem(REFRESH_TOKEN_KEY);
-    const storedUser = localStorage.getItem(USER_KEY);
-    if (storedAccess && storedRefresh && storedUser) {
-      setAccessToken(storedAccess);
-      setRefreshToken(storedRefresh);
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
+  const [isInitializing, setIsInitializing] = useState(true);
+  const accessTokenRef = useRef<string | null>(null);
 
   const refreshAccessToken = useCallback(async (): Promise<string | null> => {
-    const currentRefresh =
-      refreshToken ?? localStorage.getItem(REFRESH_TOKEN_KEY);
-    if (!currentRefresh) return null;
-
     try {
-      const data = await refreshTokens(currentRefresh);
+      const data = await refreshTokens();
       setAccessToken(data.access);
-      setRefreshToken(data.refresh);
-      localStorage.setItem(ACCESS_TOKEN_KEY, data.access);
-      localStorage.setItem(REFRESH_TOKEN_KEY, data.refresh);
+      accessTokenRef.current = data.access;
       return data.access;
     } catch {
-      // Refresh token expired — force logout
       setUser(null);
       setAccessToken(null);
-      setRefreshToken(null);
-      localStorage.removeItem(ACCESS_TOKEN_KEY);
-      localStorage.removeItem(REFRESH_TOKEN_KEY);
+      accessTokenRef.current = null;
       localStorage.removeItem(USER_KEY);
       return null;
     }
-  }, [refreshToken]);
+  }, []);
 
-  // Inject token refresher into articlesApi (avoids circular imports)
+  // On mount: restore user from localStorage, then silently refresh access token via cookie
+  useEffect(() => {
+    const storedUser = localStorage.getItem(USER_KEY);
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+    refreshAccessToken().finally(() => setIsInitializing(false));
+  }, [refreshAccessToken]);
+
+  // Inject token functions into articlesApi (avoids circular imports)
   useEffect(() => {
     setTokenRefresher(refreshAccessToken);
+    setAccessTokenGetter(() => accessTokenRef.current);
   }, [refreshAccessToken]);
 
   const login = useCallback(
@@ -84,35 +74,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const data = await loginUser(email, password);
       setUser(data.user);
       setAccessToken(data.access);
-      setRefreshToken(data.refresh);
-      localStorage.setItem(ACCESS_TOKEN_KEY, data.access);
-      localStorage.setItem(REFRESH_TOKEN_KEY, data.refresh);
+      accessTokenRef.current = data.access;
       localStorage.setItem(USER_KEY, JSON.stringify(data.user));
     },
     []
   );
 
   const logout = useCallback(async (): Promise<void> => {
-    const currentAccess =
-      accessToken ?? localStorage.getItem(ACCESS_TOKEN_KEY);
-    const currentRefresh =
-      refreshToken ?? localStorage.getItem(REFRESH_TOKEN_KEY);
-
-    if (currentRefresh && currentAccess) {
+    const currentAccess = accessTokenRef.current;
+    if (currentAccess) {
       try {
-        await logoutUser(currentRefresh, currentAccess);
+        await logoutUser(currentAccess);
       } catch {
         // Ignore errors — always clear local state
       }
     }
-
     setUser(null);
     setAccessToken(null);
-    setRefreshToken(null);
-    localStorage.removeItem(ACCESS_TOKEN_KEY);
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    accessTokenRef.current = null;
     localStorage.removeItem(USER_KEY);
-  }, [accessToken, refreshToken]);
+  }, []);
 
   const register = useCallback(
     async (data: RegisterData): Promise<RegisterResponse> => {
@@ -122,7 +103,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const isAuthenticated = user !== null && accessToken !== null;
-  const isActiveMember = isAuthenticated; // simplejwt blocks inactive users at login
+  const isActiveMember = isAuthenticated;
   const isAdmin = isAuthenticated && (user?.is_staff ?? false);
 
   return (
@@ -133,6 +114,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAuthenticated,
         isActiveMember,
         isAdmin,
+        isInitializing,
         login,
         logout,
         register,
