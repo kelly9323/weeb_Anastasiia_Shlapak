@@ -138,7 +138,7 @@ export default function ContactPage() {
                 type="submit"
                 disabled={loading}
               >
-                {loading ? "Envoi..." : "Contact"}
+                {loading ? "Envoi..." : "Envoyer"}
               </Button>
             </div>
           </form>

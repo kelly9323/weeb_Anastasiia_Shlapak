@@ -43,7 +43,7 @@ export default function Header() {
             </Link>
             <li>
               <Link className="hover" to="/" onClick={() => setIsOpen(false)}>
-                Home
+                Accueil
               </Link>
             </li>
             <li>
@@ -78,14 +78,14 @@ export default function Header() {
                 <li>
                   <Button variant="primary-no-bg" size="sm">
                     <Link to="/login" onClick={() => setIsOpen(false)}>
-                      Log in
+                      Se connecter
                     </Link>
                   </Button>
                 </li>
                 <li>
                   <Button variant="primary" size="sm">
                     <Link to="/signup" onClick={() => setIsOpen(false)}>
-                      Join us
+                      Nous rejoindre
                     </Link>
                   </Button>
                 </li>

@@ -17,7 +17,7 @@ export default function Footer() {
     <>
       <footer className={styles.footer}>
           <p className={styles.description}>
-            @ 2025 Weeb, Inc. All rights reserved.
+            © 2025 Weeb, Inc. Tous droits réservés.
           </p>
         <div className={styles.socialIcons}>
           {socialIcons.map(({ src, alt }) => (
