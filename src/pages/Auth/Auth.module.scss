@@ -3,9 +3,9 @@
 @use "sass:color";
 
 .container {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 2rem;
+  max-width: 480px;
+  margin: 1.75rem auto;
+  padding: 1.75rem;
   background: color.adjust($background-color, $lightness: 5%);
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -13,8 +13,9 @@
 
 .h1 {
   @include header1;
+  font-size: 2rem;
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.25rem;
   color: $primary-color;
 }
 
